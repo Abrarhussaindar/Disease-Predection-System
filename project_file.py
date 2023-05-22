@@ -2,8 +2,6 @@ from tkinter import *
 import numpy as np
 import pandas as pd
 from PIL import Image, ImageTk
-
-
 from tkinter import ttk
 import tkinter
 
@@ -126,6 +124,208 @@ def DecisionTree():
         t1.delete("1.0", END)
         t1.insert(END, "Not Found")
 
+def randomforest():
+    from sklearn.ensemble import RandomForestClassifier
+    clf4 = RandomForestClassifier()
+    clf4 = clf4.fit(X,np.ravel(y))
+
+    # calculating accuracy-------------------------------------------------------------------
+    from sklearn.metrics import accuracy_score
+    y_pred=clf4.predict(X_test)
+    print(accuracy_score(y_test, y_pred))
+    print(accuracy_score(y_test, y_pred,normalize=False))
+    # -----------------------------------------------------
+
+    psymptoms = [Symptom1.get(),Symptom2.get(),Symptom3.get(),Symptom4.get(),Symptom5.get()]
+
+    for k in range(0,len(l1)):
+        for z in psymptoms:
+            if(z==l1[k]):
+                l2[k]=1
+
+    inputtest = [l2]
+    predict = clf4.predict(inputtest)
+    predicted=predict[0]
+
+    h='no'
+    for a in range(0,len(disease)):
+        if(predicted == a):
+            h='yes'
+            break
+
+    if (h=='yes'):
+        t2.delete("1.0", END)
+        t2.insert(END, disease[a])
+    else:
+        t2.delete("1.0", END)
+        t2.insert(END, "Not Found")
+
+
+def NaiveBayes():
+    from sklearn.naive_bayes import GaussianNB
+    gnb = GaussianNB()
+    gnb=gnb.fit(X,np.ravel(y))
+
+    # calculating accuracy-------------------------------------------------------------------
+    from sklearn.metrics import accuracy_score
+    y_pred=gnb.predict(X_test)
+    print(accuracy_score(y_test, y_pred))
+    print(accuracy_score(y_test, y_pred,normalize=False))
+    # -----------------------------------------------------
+
+    psymptoms = [Symptom1.get(),Symptom2.get(),Symptom3.get(),Symptom4.get(),Symptom5.get()]
+    for k in range(0,len(l1)):
+        for z in psymptoms:
+            if(z==l1[k]):
+                l2[k]=1
+
+    inputtest = [l2]
+    predict = gnb.predict(inputtest)
+    predicted=predict[0]
+
+    h='no'
+    for a in range(0,len(disease)):
+        if(predicted == a):
+            h='yes'
+            break
+
+    if (h=='yes'):
+        t3.delete("1.0", END)
+        t3.insert(END, disease[a])
+    else:
+        t3.delete("1.0", END)
+        t3.insert(END, "Not Found")
+
+
+def K_NearestNeighbors():
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import pandas as pd
+    from matplotlib import rcParams
+    from matplotlib.cm import rainbow
+    # %matplotlib inline
+    import warnings
+    warnings.filterwarnings('ignore')
+
+    from sklearn.neighbors import KNeighborsClassifier
+    df = pd.read_csv("heart_disease_dataset.csv")
+    df.info()
+    df.describe()
+    import seaborn as sns
+    #obtain the correlation of each feature in dataset
+    corrmat = df.corr()
+    top_corr_features = corrmat.index
+    plt.figure(figsize=(20,20))
+    #plot heat map
+    sns.heatmap(df[top_corr_features].corr(),annot=True,cmap='RdYlGn')
+    plt.show()
+    df.hist()
+    plt.show()
+    sns.set_style('whitegrid')
+    sns.countplot(x='target',data=df,palette='RdBu_r')
+    plt.show()
+    dataset = pd.get_dummies(df,columns = ['sex' , 'cp', 'fbs', 'restecg', 'exang', 'slope', 'ca', 'thal'])
+    from sklearn.model_selection import train_test_split
+    from sklearn.preprocessing import StandardScaler
+    standardScaler = StandardScaler()
+    columns_to_scale = ['age', 'trestbps', 'chol', 'thalach', 'oldpeak']
+    dataset[columns_to_scale] = standardScaler.fit_transform(dataset[columns_to_scale])
+    y=dataset['target']
+    x=dataset.drop(['target'],axis=1)
+    X_train, X_test, y_train, y_test = train_test_split(x, y, test_size = 0.33, random_state = 0)
+    knn_scores = []
+    for k in range(1,21):
+        knn_classifier = KNeighborsClassifier(n_neighbors = k)
+        knn_classifier.fit(X_train, y_train)
+        knn_scores.append(knn_classifier.score(X_test, y_test))
+
+    plt.plot([k for k in range(1,21)],knn_scores,color='blue')
+    for i in range(1,21):
+        plt.text(i, knn_scores[i-1], (i, knn_scores[i-1]))
+    plt.xticks([i for i in range(1, 21)])
+    plt.xlabel('Number of Neighbors (K)',color='Red',weight='bold',fontsize='12')
+    plt.ylabel('Scores',color='Red',weight='bold',fontsize='12')
+    plt.title('K Neighbors Classifier scores for different K values',color='Red',weight='bold',fontsize='12')
+    plt.show()
+    plt.rcParams["font.weight"]= "bold"
+    plt.rcParams["axes.labelweight"] = "bold"
+    from sklearn.model_selection import cross_val_score
+    knn_classifier = KNeighborsClassifier(n_neighbors = 12)
+    score=cross_val_score(knn_classifier,x,y,cv=10)
+    score.mean()
+
+
+def adaboost():
+    import numpy as np 
+    import pandas as pd 
+    import sklearn
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+
+    from sklearn.model_selection import train_test_split
+    from sklearn.model_selection import KFold
+    from sklearn.model_selection import GridSearchCV
+    from sklearn.model_selection import cross_val_score
+    from sklearn.preprocessing import LabelEncoder
+    from sklearn.tree import DecisionTreeClassifier
+    from sklearn.ensemble import AdaBoostClassifier
+    from sklearn.ensemble import GradientBoostingClassifier
+    from sklearn.datasets import load_breast_cancer
+    from sklearn.datasets import load_digits
+    from sklearn import metrics
+
+
+    import os
+    import warnings
+    warnings.filterwarnings('ignore')
+
+    cancer = load_breast_cancer()
+    digits = load_digits()
+
+    data = cancer
+
+    df = pd.DataFrame(data= np.c_[data['data'], data['target']],columns= list(data['feature_names']) + ['target'])
+    df['target'] = df['target'].astype('uint16')
+
+    df
+    df.head()
+
+    X = df.drop('target', axis=1)
+    y = df[['target']]
+
+    # split data into train and test/validation sets
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=101)
+    print(X_train.shape)
+    print(y_train.shape)
+    print(X_test.shape)
+    print(y_test.shape)
+
+    print(y_train.mean())
+    print(y_test.mean())
+
+    shallow_tree = DecisionTreeClassifier(max_depth=2, random_state = 100)
+    shallow_tree.fit(X_train, y_train)
+
+    # test error
+    y_pred = shallow_tree.predict(X_test)
+    score = metrics.accuracy_score(y_test, y_pred)
+    score
+    estimators = list(range(1, 50, 3))
+
+    abc_scores = []
+    for n_est in estimators:
+        ABC = AdaBoostClassifier(base_estimator=shallow_tree, n_estimators = n_est, random_state=101)
+        
+        ABC.fit(X_train, y_train)
+        y_pred = ABC.predict(X_test)
+        score = metrics.accuracy_score(y_test, y_pred)
+        abc_scores.append(score)
+
+    plt.plot(estimators, abc_scores)
+    plt.xlabel('n_estimators')
+    plt.ylabel('accuracy')
+    plt.ylim([0.85, 1])
+    plt.show()
 
 root = Tk()
 root.title("DISEASE PREDICTOR SYSTEM")
@@ -147,19 +347,12 @@ Symptom5.set(None)
 Name = StringVar()
 
 
-# our
-# title_lbl = Label(root, text="Welcome!", font=("times and roman", 30, "bold"), bg="black", fg="white")
-# title_lbl.place(x=250, y=0, width=1000, height=100)
-
-
 # Heading
 title_lbl = Label(root, text="Disease Prediction System", font=("times and roman", 30, "bold"), bg="black", fg="white")
 title_lbl.place(x=250, y=0, width=1000, height=100)
 
 main_frame = Frame(root, bd=2, bg="lightgreen")
 main_frame.place(x=250, y=100, width=1000, height=600)
-
-
 
 
 img = Image.open("bg.jpg")
@@ -199,8 +392,6 @@ S4Lb.place(x=50, y=250, width=200, height=50)
 S5Lb = Label(main_frame, text="Symptom 5", font=("times and roman", 17, "bold"), fg="white", bg="#228BB9")
 S5Lb.place(x=50, y=310, width=200, height=50)
 
-lrLb = Label(main_frame, text="Result", font=("times and roman", 14, "bold"), fg="white", bg="#820000")
-lrLb.place(x=400, y=500, width=200, height=60)
 
 # entries
 OPTIONS = sorted(l1)
@@ -225,10 +416,37 @@ S5En = OptionMenu(main_frame, Symptom5, *OPTIONS)
 S5En.place(x=650, y=310, width=300, height=50)
 
 
-dst = Button(main_frame, text="Analyse", command=DecisionTree, font=("times and roman", 14, "bold"), bg="green",
+dst = Button(main_frame, text="DecisionTree", command=DecisionTree, font=("times and roman", 14, "bold"), bg="green",
             fg="white")
+dst.place(x=480, y=450)
 
-t1 = Text(main_frame, height=100, width=100,  font=("times and roman", 15, "bold"), bg="white", fg="black")
-t1.place(x=650, y=500, width=300, height=60)
+dst = Button(main_frame, text="K_NearestNeighbors", command=K_NearestNeighbors, font=("times and roman", 14, "bold"), bg="green",
+            fg="white")
+dst.place(x=50, y=450)
+
+
+dst = Button(main_frame, text="adaboost", command=adaboost, font=("times and roman", 14, "bold"), bg="green",
+            fg="white")
+dst.place(x=50, y=400)
+
+rnf = Button(main_frame, text="Randomforest", command=randomforest, font=("times and roman", 14, "bold"), bg="green",
+            fg="white")
+rnf.place(x=480, y=520)
+
+lr = Button(main_frame, text="NaiveBayes", command=NaiveBayes, font=("times and roman", 14, "bold"), bg="green",
+            fg="white")
+lr.place(x=480, y=380)
+
+#textfileds
+t1 = Text(main_frame, height=1, width=40,bg="white",fg="black", font=("times and roman", 15, "bold"))
+t1.place(x=650, y=450, width=300, height=40)
+
+t2 = Text(main_frame, height=1, width=40,bg="white",fg="black", font=("times and roman", 15, "bold"))
+t2.place(x=650, y=520, width=300, height=40)
+
+t3 = Text(main_frame, height=1, width=40,bg="white",fg="black", font=("times and roman", 15, "bold"))
+t3.place(x=650, y=380, width=300, height=40)
 
 root.mainloop()
+
+
