@@ -323,6 +323,7 @@ def adaboost():
     plt.xlabel('n_estimators')
     plt.ylabel('accuracy')
     plt.ylim([0.85, 1])
+    plt.title('AdaBoost Algo. For Breast Cancer Predection')
     plt.show()
 
 root = Tk()
@@ -414,39 +415,39 @@ S5En.place(x=300, y=310, width=300, height=50)
 
 dst = Button(main_frame, text="DecisionTree", command=DecisionTree, font=("times and roman", 14, "bold"), bg="green",
             fg="white")
-dst.place(x=700, y=260)
+dst.place(x=850, y=260)
 
 
 
 dst = Button(main_frame, text="Results", font=("times and roman", 14, "bold"), bg="Red",
             fg="white")
-dst.place(x=975, y=20)
+dst.place(x=1000, y=20)
 # (x=700, y=90)
 dst = Button(main_frame, text="adaboost", command=adaboost, font=("times and roman", 14, "bold"), bg="green",
             fg="white")
-dst.place(x=700, y=350)
+dst.place(x=850, y=350)
 
 dst = Button(main_frame, text="K_NearestNeighbors", command=K_NearestNeighbors, font=("times and roman", 14, "bold"), bg="green",
             fg="white")
-dst.place(x=900, y=350)
+dst.place(x=1000, y=350)
 
 rnf = Button(main_frame, text="Randomforest", command=randomforest, font=("times and roman", 14, "bold"), bg="green",
             fg="white")
-rnf.place(x=700, y=90)
+rnf.place(x=850, y=90)
 
 lr = Button(main_frame, text="NaiveBayes", command=NaiveBayes, font=("times and roman", 14, "bold"), bg="green",
             fg="white")
-lr.place(x=700, y=180)
+lr.place(x=850, y=180)
 
 #textfileds
 t1 = Text(main_frame, height=1, width=40,bg="white",fg="black", font=("times and roman", 15, "bold"))
-t1.place(x=900, y=260, width=300, height=40)
+t1.place(x=1050, y=260, width=300, height=40)
 
 t2 = Text(main_frame, height=1, width=40,bg="white",fg="black", font=("times and roman", 15, "bold"))
-t2.place(x=900, y=90, width=300, height=40)
+t2.place(x=1050, y=90, width=300, height=40)
 
 t3 = Text(main_frame, height=1, width=40,bg="white",fg="black", font=("times and roman", 15, "bold"))
-t3.place(x=900, y=180, width=300, height=40)
+t3.place(x=1050, y=180, width=300, height=40)
 
 root.mainloop()
 
