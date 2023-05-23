@@ -5,6 +5,7 @@ from PIL import Image, ImageTk
 from tkinter import ttk
 import tkinter
 
+
 l1 = ['back_pain', 'constipation', 'abdominal_pain', 'diarrhoea', 'mild_fever', 'yellow_urine',
       'yellowing_of_eyes', 'acute_liver_failure', 'fluid_overload', 'swelling_of_stomach',
       'swelled_lymph_nodes', 'malaise', 'blurred_and_distorted_vision', 'phlegm', 'throat_irritation',
@@ -98,7 +99,7 @@ def DecisionTree():
     # calculating accuracy
     from sklearn.metrics import accuracy_score
     y_pred = clf3.predict(X_test)
-    print(accuracy_score(y_test, y_pred))
+    print("accuracy from dt: ",accuracy_score(y_test, y_pred))
 
     psymptoms = [Symptom1.get(), Symptom2.get(), Symptom3.get(), Symptom4.get(), Symptom5.get()]
 
@@ -132,7 +133,7 @@ def randomforest():
     # calculating accuracy-------------------------------------------------------------------
     from sklearn.metrics import accuracy_score
     y_pred=clf4.predict(X_test)
-    print(accuracy_score(y_test, y_pred))
+    print("accuracy from rf: ",accuracy_score(y_test, y_pred))
     print(accuracy_score(y_test, y_pred,normalize=False))
     # -----------------------------------------------------
 
@@ -160,7 +161,6 @@ def randomforest():
         t2.delete("1.0", END)
         t2.insert(END, "Not Found")
 
-
 def NaiveBayes():
     from sklearn.naive_bayes import GaussianNB
     gnb = GaussianNB()
@@ -169,7 +169,7 @@ def NaiveBayes():
     # calculating accuracy-------------------------------------------------------------------
     from sklearn.metrics import accuracy_score
     y_pred=gnb.predict(X_test)
-    print(accuracy_score(y_test, y_pred))
+    print("accuracy from nb: ",accuracy_score(y_test, y_pred))
     print(accuracy_score(y_test, y_pred,normalize=False))
     # -----------------------------------------------------
 
@@ -195,7 +195,6 @@ def NaiveBayes():
     else:
         t3.delete("1.0", END)
         t3.insert(END, "Not Found")
-
 
 def K_NearestNeighbors():
     import numpy as np
@@ -253,7 +252,6 @@ def K_NearestNeighbors():
     knn_classifier = KNeighborsClassifier(n_neighbors = 12)
     score=cross_val_score(knn_classifier,x,y,cv=10)
     score.mean()
-
 
 def adaboost():
     import numpy as np 
@@ -329,8 +327,8 @@ def adaboost():
 
 root = Tk()
 root.title("DISEASE PREDICTOR SYSTEM")
-root.geometry("1400x1400+0+0")
-root.resizable(False, False)
+root.geometry("2000x2000+0+0")
+root.resizable(True, True)
 
 # entry variables
 # here set(None) is used as set() expects an iterable
@@ -346,25 +344,23 @@ Symptom5 = StringVar()
 Symptom5.set(None)
 Name = StringVar()
 
-
 # Heading
-title_lbl = Label(root, text="Disease Prediction System", font=("times and roman", 30, "bold"), bg="black", fg="white")
-title_lbl.place(x=250, y=0, width=1000, height=100)
+title_lbl = Label(root, text="Prediction System Of Diseases Based On Symptoms Of Patients ", font=("times and roman", 30, "bold"), bg="black", fg="white")
+title_lbl.place(x=0, y=0, width=1600, height=100)
 
 main_frame = Frame(root, bd=2, bg="lightgreen")
-main_frame.place(x=250, y=100, width=1000, height=600)
-
+main_frame.place(x=0, y=100, width=1600, height=800)
 
 img = Image.open("bg.jpg")
-img = img.resize((1000, 600), Image.LANCZOS)
+img = img.resize((1600, 800), Image.LANCZOS)
 photoimg = ImageTk.PhotoImage(img)
 
 f_lbl = Label(main_frame, image=photoimg)
-f_lbl.place(x=0, y=0, width=1000, height=600)
+f_lbl.place(x=0, y=0, width=1600, height=800)
 
 # labels
-name_lbl = Label(main_frame, text="Name Of The Patient", font=("times and roman", 20, "bold"), fg="white", bg="#228BB9")
-name_lbl.place(x=50, y=10, width=350, height=50)
+name_lbl = Label(main_frame, text="Name", font=("times and roman", 20, "bold"), fg="white", bg="#228BB9")
+name_lbl.place(x=50, y=10, width=150, height=50)
 # S1Lb = Label(main_frame, text="Choose The Method To Analyse ", font=("times and roman", 17, "bold"), fg="yellow", bg="black")
 # S1Lb.place(x=50, y=70, width=400, height=50)
 
@@ -397,55 +393,60 @@ S5Lb.place(x=50, y=310, width=200, height=50)
 OPTIONS = sorted(l1)
 
 NameEn = Entry(main_frame, textvariable=Name, font=("times and roman", 17, "bold"))
-NameEn.place(x=650, y=10, width=300, height=50)
+NameEn.place(x=300, y=10, width=300, height=50)
 
 
 S1En = OptionMenu(main_frame, Symptom1, *OPTIONS)
-S1En.place(x=650, y=70, width=300, height=50)
+S1En.place(x=300, y=70, width=300, height=50)
 
 S2En = OptionMenu(main_frame, Symptom2, *OPTIONS)
-S2En.place(x=650, y=130, width=300, height=50)
+S2En.place(x=300, y=130, width=300, height=50)
 
 S3En = OptionMenu(main_frame, Symptom3, *OPTIONS)
-S3En.place(x=650, y=190, width=300, height=50)
+S3En.place(x=300, y=190, width=300, height=50)
 
 S4En = OptionMenu(main_frame, Symptom4, *OPTIONS)
-S4En.place(x=650, y=250, width=300, height=50)
+S4En.place(x=300, y=250, width=300, height=50)
 
 S5En = OptionMenu(main_frame, Symptom5, *OPTIONS)
-S5En.place(x=650, y=310, width=300, height=50)
+S5En.place(x=300, y=310, width=300, height=50)
 
 
 dst = Button(main_frame, text="DecisionTree", command=DecisionTree, font=("times and roman", 14, "bold"), bg="green",
             fg="white")
-dst.place(x=480, y=450)
+dst.place(x=700, y=260)
+
+
+
+dst = Button(main_frame, text="Results", font=("times and roman", 14, "bold"), bg="Red",
+            fg="white")
+dst.place(x=975, y=20)
+# (x=700, y=90)
+dst = Button(main_frame, text="adaboost", command=adaboost, font=("times and roman", 14, "bold"), bg="green",
+            fg="white")
+dst.place(x=700, y=350)
 
 dst = Button(main_frame, text="K_NearestNeighbors", command=K_NearestNeighbors, font=("times and roman", 14, "bold"), bg="green",
             fg="white")
-dst.place(x=50, y=450)
-
-
-dst = Button(main_frame, text="adaboost", command=adaboost, font=("times and roman", 14, "bold"), bg="green",
-            fg="white")
-dst.place(x=50, y=400)
+dst.place(x=900, y=350)
 
 rnf = Button(main_frame, text="Randomforest", command=randomforest, font=("times and roman", 14, "bold"), bg="green",
             fg="white")
-rnf.place(x=480, y=520)
+rnf.place(x=700, y=90)
 
 lr = Button(main_frame, text="NaiveBayes", command=NaiveBayes, font=("times and roman", 14, "bold"), bg="green",
             fg="white")
-lr.place(x=480, y=380)
+lr.place(x=700, y=180)
 
 #textfileds
 t1 = Text(main_frame, height=1, width=40,bg="white",fg="black", font=("times and roman", 15, "bold"))
-t1.place(x=650, y=450, width=300, height=40)
+t1.place(x=900, y=260, width=300, height=40)
 
 t2 = Text(main_frame, height=1, width=40,bg="white",fg="black", font=("times and roman", 15, "bold"))
-t2.place(x=650, y=520, width=300, height=40)
+t2.place(x=900, y=90, width=300, height=40)
 
 t3 = Text(main_frame, height=1, width=40,bg="white",fg="black", font=("times and roman", 15, "bold"))
-t3.place(x=650, y=380, width=300, height=40)
+t3.place(x=900, y=180, width=300, height=40)
 
 root.mainloop()
 

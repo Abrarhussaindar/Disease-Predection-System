@@ -1,1 +1,1 @@
-NaiveBayes
+ymptom1.get(), Symptom2.get(), Symptom3.g
